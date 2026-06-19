@@ -6,6 +6,7 @@ export default function AutoComplete({
   fetchData,
   dataKey,
   onChange = () => {},
+  onSelect = () => {},
   placeholder,
 }) {
   const [inputData, setInputData] = useState("");
@@ -18,12 +19,10 @@ export default function AutoComplete({
       result = staticData.filter((item) => {
         return item.toLowerCase().includes(inputData.toLowerCase());
       });
-      return setSuggestionsList(result);
     } else if (fetchData) {
       result = await fetchData.data.recipes;
-      return setSuggestionsList(result);
     }
-    setSuggestionsList([]);
+    setSuggestionsList(result);
   };
 
   const handleInputChange = (e) => {
@@ -32,14 +31,20 @@ export default function AutoComplete({
   };
 
   const handleSuggesitionClick = (suggestionsList) => {
+    debugger;
+    console.log(setSuggestionsList);
     setInputData(dataKey ? suggestionsList[dataKey] : dataKey);
     onSelect(suggestionsList);
     setSuggestionsList([]);
   };
 
   useEffect(() => {
-    getSuggestionsList(inputData);
-  }, [inputData, staticData]);
+    if (inputData.length >= 1) {
+      getSuggestionsList(inputData);
+    } else {
+      setSuggestionsList([]);
+    }
+  }, [inputData, staticData, fetchData]);
 
   return (
     <>
@@ -47,6 +52,7 @@ export default function AutoComplete({
         type="text"
         placeholder={placeholder}
         onChange={handleInputChange}
+        value={inputData}
       />
       {(suggestionsList || error || loading) && (
         <ul>
@@ -57,7 +63,7 @@ export default function AutoComplete({
             suggestions={suggestionsList}
             highlight={inputData}
             dataKey={dataKey}
-            onSelect={handleSuggesitionClick}
+            onSuggestionClick={handleSuggesitionClick}
           />
         </ul>
       )}

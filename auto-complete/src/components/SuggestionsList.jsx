@@ -2,7 +2,7 @@ export default function SuggestionsList({
   suggestions,
   highlight,
   dataKey,
-  onSelect = () => {},
+  onSuggestionClick = () => {},
 }) {
   const getHighLightText = (text) => {
     const parts = text.split(new RegExp(`(${highlight})`, "gi"));
@@ -11,7 +11,9 @@ export default function SuggestionsList({
       <span>
         {parts.map((part, index) => {
           return part.toLowerCase() === highlight.toLowerCase() ? (
-            <b key={index}>{part}</b>
+            <b key={index} style={{ color: "red" }}>
+              {part}
+            </b>
           ) : (
             part
           );
@@ -25,10 +27,11 @@ export default function SuggestionsList({
       {suggestions &&
         suggestions.map((suggestion, index) => {
           const currSuggestion = dataKey ? suggestion[dataKey] : suggestion;
-          {
-            getHighLightText(currSuggestion);
-          }
-          return <li key={index}>{getHighLightText(currSuggestion)}</li>;
+          return (
+            <li key={index} onClick={() => onSuggestionClick(suggestion)}>
+              {getHighLightText(currSuggestion)}
+            </li>
+          );
         })}
     </>
   );

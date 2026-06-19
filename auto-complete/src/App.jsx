@@ -32,6 +32,7 @@ function App() {
           staticData=""
           fetchData={fetchSuggestionData}
           dataKey="name"
+          onSelect={(res) => console.log(res)}
           onChange={(input) => {
             setInputValue(input);
           }}

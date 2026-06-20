@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import "./App.css";
 import AutoComplete from "./components/AutoComplete";
 import useFetch from "./hooks/useFetch";
+import useDebounce from "./hooks/useDebounce";
 
 function App() {
   const staticData = [
@@ -20,8 +21,10 @@ function App() {
 
   const [inputValue, setInputValue] = useState("");
 
+  const debouncedInput = useDebounce(inputValue, 500);
+
   const fetchSuggestionData = useFetch(
-    `https://dummyjson.com/recipes/search?q=${inputValue}`,
+    `https://dummyjson.com/recipes/search?q=${debouncedInput}`,
   );
 
   return (
